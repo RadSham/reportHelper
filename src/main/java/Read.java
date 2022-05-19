@@ -1,8 +1,5 @@
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -11,6 +8,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
+import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 
 public class Read {
     private static final Logger log = getLogger(Read.class);
@@ -34,15 +32,16 @@ public class Read {
         XSSFSheet sheet = wbStart.getSheetAt(0);
         findColumn(sheet, "Наименование");
         findColumn(sheet, "ШТ");
-        System.out.println(path + columns);
 
         for (Row row : sheet) {
             Goods good = new Goods();
-            // Get iterator to all cells of current row
+
+            //searching in special columns
             for (Map.Entry<String, Integer> entry : columns.entrySet()) {
 
                 Cell cell = row.getCell(entry.getValue());
                 if (cell == null) break;
+
                 CellType cellType = null;
                 try {
                     cellType = cell.getCellType();
@@ -56,6 +55,8 @@ public class Read {
                     case BOOLEAN:
                     case ERROR:
                     case FORMULA:
+                        FormulaEvaluator evaluator = wbStart.getCreationHelper().createFormulaEvaluator();
+                        if(evaluator.evaluateFormulaCell(cell)==NUMERIC) good.setNumber(cell.getNumericCellValue());
                         break;
                     case NUMERIC:
                         good.setNumber(cell.getNumericCellValue());
@@ -75,8 +76,13 @@ public class Read {
         Map<String, Double> mapGoods = new HashMap<>();
         List<Goods> list = read(path);
         for (Goods g : list) {
+            System.out.print(" before merge " + g.getName() + " " + g.getNumber());
+
             if (g.getName() != null && g.getNumber() != null) {
                 mapGoods.merge(g.getName(), g.getNumber(), Double::sum);
+                System.out.println();
+                System.out.print("after merge " + g.getName() + g.getNumber());
+                System.out.println();
             }
         }
         return mapGoods;
