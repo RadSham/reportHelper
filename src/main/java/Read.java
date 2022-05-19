@@ -14,12 +14,9 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class Read {
     private static final Logger log = getLogger(Read.class);
 
-    Map<String, Double> mapGoods = new HashMap<>();
-    List<Goods> goodsList;
+    private List<Goods> read(String path) {
 
-    public List<Goods> read(String path) {
-
-        goodsList = new ArrayList();
+        List<Goods> goodsList = new ArrayList();
 
         FileInputStream inputStream;
         XSSFWorkbook wbStart = null;
@@ -71,7 +68,8 @@ public class Read {
         return goodsList;
     }
 
-    public Map<String, Double> getMapGoods(String path) {
+    public Map<String, Double> getGoodsMap(String path) {
+        Map<String, Double> mapGoods = new HashMap<>();
         List<Goods> list = read(path);
         for (Goods g : list) {
             if (g.getName() != null && g.getNumber() != null) {

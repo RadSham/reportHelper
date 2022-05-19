@@ -18,7 +18,7 @@ public class Write {
         return style;
     }
 
-    public void write(String path, List<Goods> readedList) {
+    private void write(String path, List<Goods> readedList) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("write sheet");
 
