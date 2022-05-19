@@ -76,13 +76,9 @@ public class Read {
         Map<String, Double> mapGoods = new HashMap<>();
         List<Goods> list = read(path);
         for (Goods g : list) {
-            System.out.print(" before merge " + g.getName() + " " + g.getNumber());
 
             if (g.getName() != null && g.getNumber() != null) {
                 mapGoods.merge(g.getName(), g.getNumber(), Double::sum);
-                System.out.println();
-                System.out.print("after merge " + g.getName() + g.getNumber());
-                System.out.println();
             }
         }
         return mapGoods;
