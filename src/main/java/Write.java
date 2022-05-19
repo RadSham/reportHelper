@@ -20,7 +20,7 @@ public class Write {
 
     private void write(String path, List<Goods> readedList) {
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("write sheet");
+        XSSFSheet sheet = workbook.createSheet("Sheet1");
 
         int rownum = 0;
         Cell cell;
@@ -34,6 +34,7 @@ public class Write {
         cell = row.createCell(0, CellType.STRING);
         cell.setCellValue("name");
         cell.setCellStyle(style);
+
         // number
         cell = row.createCell(1, CellType.STRING);
         cell.setCellValue("number");
@@ -50,10 +51,7 @@ public class Write {
             // number
             cell = row.createCell(1, CellType.NUMERIC);
             cell.setCellValue(good.getNumber());
-            /*// Bonus (E)
-            String formula = "0.1*C" + (rownum + 1) + "*D" + (rownum + 1);
-            cell = row.createCell(4, CellType.FORMULA);
-            cell.setCellFormula(formula);*/
+
         }
 
 

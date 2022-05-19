@@ -2,6 +2,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -14,12 +15,14 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class Read {
     private static final Logger log = getLogger(Read.class);
 
-    private List<Goods> read(String path) {
+    private final Map<String, Integer> columns = new HashMap<>();
 
+    private List<Goods> read(String path) {
         List<Goods> goodsList = new ArrayList();
 
         FileInputStream inputStream;
         XSSFWorkbook wbStart = null;
+
         try {
             inputStream = new FileInputStream(path);
             wbStart = new XSSFWorkbook(inputStream);
@@ -29,39 +32,39 @@ public class Read {
 
         assert wbStart != null;
         XSSFSheet sheet = wbStart.getSheetAt(0);
+        findColumn(sheet, "Наименование");
+        findColumn(sheet, "ШТ");
+        System.out.println(path + columns);
 
         for (Row row : sheet) {
             Goods good = new Goods();
             // Get iterator to all cells of current row
-            Iterator<Cell> cellIterator = row.cellIterator();
+            for (Map.Entry<String, Integer> entry : columns.entrySet()) {
 
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                CellType cellType = cell.getCellType();
+                Cell cell = row.getCell(entry.getValue());
+                if (cell == null) break;
+                CellType cellType = null;
+                try {
+                    cellType = cell.getCellType();
+                } catch (Exception IO) {
+                    System.out.println(IO);
+                }
 
                 switch (cellType) {
                     case _NONE:
                     case BLANK:
                     case BOOLEAN:
                     case ERROR:
+                    case FORMULA:
                         break;
-                    /*case FORMULA:
-                        // Formula
-                        System.out.print(cell.getCellFormula());
-                        System.out.print("\t");
-
-                        FormulaEvaluator evaluator = wbStart.getCreationHelper().createFormulaEvaluator();
-                        System.out.print(evaluator.evaluate(cell).getNumberValue());
-                        break;*/
                     case NUMERIC:
                         good.setNumber(cell.getNumericCellValue());
                         break;
                     case STRING:
-                        if (cell.getColumnIndex() == 1) break;
+                        if (cell.getColumnIndex() == columns.get("ШТ")) break;
                         good.setName(cell.getStringCellValue());
                         break;
                 }
-
             }
             goodsList.add(good);
         }
@@ -78,4 +81,14 @@ public class Read {
         }
         return mapGoods;
     }
+
+    private void findColumn(Sheet sheet, String name) {
+        Row row = sheet.getRow(1);
+        for (Cell cell : row) {
+            if (cell.getStringCellValue().equals(name)) {
+                columns.put(name, cell.getColumnIndex());
+            }
+        }
+    }
+
 }
