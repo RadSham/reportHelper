@@ -6,7 +6,7 @@ import java.util.Map;
 public class Main {
 
     private static final Logger LOG = LogManager.getLogger(Main.class);
-    static String pathTotalGoods = "C:/Users/emree/Desktop/rep/totalGoods.xlsx";
+    static String pathTotalGoods = "C:/Users/emree/Desktop/rep/Orders.xlsx";
     static String pathReportGoods = "C:/Users/emree/Desktop/rep/reportGoods.xlsx";
     static String pathFinishReport = "C:/Users/emree/Desktop/rep/finishReport.xlsx";
 

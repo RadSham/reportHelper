@@ -30,7 +30,7 @@ public class Read {
 
         assert wbStart != null;
         XSSFSheet sheet = wbStart.getSheetAt(0);
-        findColumn(sheet, "Наименование");
+        findColumn(sheet, "Наименование для отчета");
         findColumn(sheet, "ШТ");
 
         for (Row row : sheet) {
@@ -54,6 +54,7 @@ public class Read {
                     case BLANK:
                     case BOOLEAN:
                     case ERROR:
+                        good.setNumber(0.0);
                     case FORMULA:
                         FormulaEvaluator evaluator = wbStart.getCreationHelper().createFormulaEvaluator();
                         if(evaluator.evaluateFormulaCell(cell)==NUMERIC) good.setNumber(cell.getNumericCellValue());
