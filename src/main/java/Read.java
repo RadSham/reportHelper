@@ -10,7 +10,7 @@ import java.util.*;
 import static org.apache.logging.log4j.LogManager.getLogger;
 import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 
-public class Read {
+public class Read extends FindColumn{
     private static final Logger log = getLogger(Read.class);
 
     private final Map<String, Integer> columns = new HashMap<>();
@@ -30,8 +30,8 @@ public class Read {
 
         assert wbStart != null;
         XSSFSheet sheet = wbStart.getSheetAt(0);
-        findColumn(sheet, "Наименование для отчета");
-        findColumn(sheet, "ШТ");
+        findColumn(sheet,columns, "Наименование для отчета");
+        findColumn(sheet,columns, "ШТ");
 
         for (Row row : sheet) {
             Goods good = new Goods();
@@ -40,14 +40,9 @@ public class Read {
             for (Map.Entry<String, Integer> entry : columns.entrySet()) {
 
                 Cell cell = row.getCell(entry.getValue());
+                //does not read reportGoods quantity
                 if (cell == null) break;
-
-                CellType cellType = null;
-                try {
-                    cellType = cell.getCellType();
-                } catch (Exception IO) {
-                    System.out.println(IO);
-                }
+                CellType cellType = cell.getCellType();
 
                 switch (cellType) {
                     case _NONE:
@@ -85,13 +80,5 @@ public class Read {
         return mapGoods;
     }
 
-    private void findColumn(Sheet sheet, String name) {
-        Row row = sheet.getRow(1);
-        for (Cell cell : row) {
-            if (cell.getStringCellValue().equals(name)) {
-                columns.put(name, cell.getColumnIndex());
-            }
-        }
-    }
 
 }
