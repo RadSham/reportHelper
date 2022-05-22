@@ -14,8 +14,8 @@ public class Main {
         Map<String, Double> totalGoodsMap = readClass.getGoodsMap(pathTotalGoods);
         Map<String, Double> reportGoodsMap = readClass.getGoodsMap(pathReportGoods);
 
-        Repository repository = new Repository();
-        Map<String, Double> finishMap = repository.sortReposotory(totalGoodsMap, reportGoodsMap);
+        Sort sort = new Sort();
+        Map<String, Double> finishMap = sort.sortMaps(totalGoodsMap, reportGoodsMap);
 
         WriteToFile writeToFile = new WriteToFile();
         writeToFile.writeExist(pathReportGoods, finishMap);
