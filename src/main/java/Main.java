@@ -6,8 +6,8 @@ import java.util.Map;
 public class Main {
 
     private static final Logger LOG = LogManager.getLogger(Main.class);
-    static String pathTotalGoods = "C:/Users/emree/Desktop/rep/Orders.xlsx";
-    static String pathReportGoods = "C:/Users/emree/Desktop/rep/report.xlsx";
+    static String pathTotalGoods = "C:/Users/emree/Desktop/report/Orders.xlsx";
+    static String pathReportGoods = "C:/Users/emree/Desktop/report/report.xlsx";
 
     public static void main(String[] args) {
         Read readClass = new Read();
